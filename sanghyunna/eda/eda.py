@@ -10,35 +10,35 @@ integrated_df = pd.concat([train_df_wo_target, test_df], axis=0)
 
 # print(f"\n--------------\nShape: {df.shape}")
 
-dam = []
-fill1 = []
-fill2 = []
-autoclave = []
-for c in sorted(list(integrated_df.columns)):
-    if c.endswith('Dam'):
-        dam.append(c)
-    elif c.endswith('Fill1'):
-        fill1.append(c)
-    elif c.endswith('Fill2'):
-        fill2.append(c)
-    elif c.endswith('AutoClave'):
-        autoclave.append(c)
+# dam = []
+# fill1 = []
+# fill2 = []
+# autoclave = []
+# for c in sorted(list(integrated_df.columns)):
+#     if c.endswith('Dam'):
+#         dam.append(c)
+#     elif c.endswith('Fill1'):
+#         fill1.append(c)
+#     elif c.endswith('Fill2'):
+#         fill2.append(c)
+#     elif c.endswith('AutoClave'):
+#         autoclave.append(c)
 
-print("Dam: ")
-for c in dam:
-    print(c)
-print("--------------")
-print("Fill1: ")
-for c in fill1:
-    print(c)
-print("--------------")
-print("Fill2: ")
-for c in fill2:
-    print(c)
-print("--------------")
-print("AutoClave: ")
-for c in autoclave:
-    print(c)
+# print("Dam: ")
+# for c in dam:
+#     print(c)
+# print("--------------")
+# print("Fill1: ")
+# for c in fill1:
+#     print(c)
+# print("--------------")
+# print("Fill2: ")
+# for c in fill2:
+#     print(c)
+# print("--------------")
+# print("AutoClave: ")
+# for c in autoclave:
+#     print(c)
 
 
 
@@ -130,3 +130,33 @@ def transform_string(input_string):
 # # Save DataFrame to CSV
 # df_output.to_csv('./output.csv', index=False)
 
+col = integrated_df['Production Qty Collect Result_Dam']
+
+# sort the ndarray
+col_sorted = np.sort(col)
+
+# convert numpy array to pandas Series
+col_series = pd.Series(col_sorted)
+
+unique_values = col_series.unique()
+
+abnormal_percentage = []
+
+for value in unique_values:
+    subset = df[df['Production Qty Collect Result_Dam'] == value]
+    total_count = len(subset)
+    if total_count == 0:
+        continue
+    abnormal_count = len(subset[subset['target'] == 'AbNormal'])
+    percentage = (abnormal_count / total_count) * 100
+    abnormal_percentage.append((value, percentage))
+
+abnormal_percentage = sorted(abnormal_percentage, key=lambda x: x[1], reverse=True)
+
+# create plot for abnormal percentage
+plt.figure(figsize=(20, 10))
+plt.bar([x[0] for x in abnormal_percentage], [x[1] for x in abnormal_percentage])
+plt.xlabel('Production Qty Collect Result_Dam')
+plt.ylabel('Abnormal Percentage')
+plt.title('Abnormal Percentage by Production Qty Collect Result_Dam')
+plt.show()
