@@ -10,6 +10,38 @@ integrated_df = pd.concat([train_df_wo_target, test_df], axis=0)
 
 # print(f"\n--------------\nShape: {df.shape}")
 
+dam = []
+fill1 = []
+fill2 = []
+autoclave = []
+for c in sorted(list(integrated_df.columns)):
+    if c.endswith('Dam'):
+        dam.append(c)
+    elif c.endswith('Fill1'):
+        fill1.append(c)
+    elif c.endswith('Fill2'):
+        fill2.append(c)
+    elif c.endswith('AutoClave'):
+        autoclave.append(c)
+
+print("Dam: ")
+for c in dam:
+    print(c)
+print("--------------")
+print("Fill1: ")
+for c in fill1:
+    print(c)
+print("--------------")
+print("Fill2: ")
+for c in fill2:
+    print(c)
+print("--------------")
+print("AutoClave: ")
+for c in autoclave:
+    print(c)
+
+
+
 # Drop Columns with entirely missing values
 df = df.dropna(axis=1, how='all')
 # print(f"\n--------------\nShape after dropping null columns: {df.shape}")
@@ -41,19 +73,17 @@ df = df.loc[:, df.apply(pd.Series.nunique) != 1]
 # for c in sorted(list(df.columns)):
 #     print(c)
 
-print(df['Workorder_AutoClave'].nunique())
-print("--------------")
-print(df['Workorder_Dam'].nunique())
-print("--------------")
-print(df['Workorder_Fill1'].nunique())
-print("--------------")
-print(df['Workorder_Fill2'].nunique())
-
-import numpy as np
+# print(df['Workorder_AutoClave'].nunique())
+# print("--------------")
+# print(df['Workorder_Dam'].nunique())
+# print("--------------")
+# print(df['Workorder_Fill1'].nunique())
+# print("--------------")
+# print(df['Workorder_Fill2'].nunique())
 
 # 주어진 ndarray
-column_to_check = "Fill2"
-arr = list(integrated_df[f'Workorder_{column_to_check}'])
+# column_to_check = "Fill2"
+# arr = list(integrated_df[f'Workorder_{column_to_check}'])
 
 # 각 자리의 글자 집합을 찾는 함수
 def find_character_sets(arr):
@@ -84,18 +114,19 @@ def transform_string(input_string):
     return '-'.join(parts)
 
 # 결과 계산
-print(f"Column: Workorder_{column_to_check}")
-print("--------------")
-arr = [transform_string(string) for string in arr]
-result_sets = find_character_sets(arr)
-for i, s in enumerate(result_sets):
-    print(f"Position [{i}]: {s}")
+# print(f"Column: Workorder_{column_to_check}")
+# print("--------------")
+# arr = [transform_string(string) for string in arr]
+# result_sets = find_character_sets(arr)
+# for i, s in enumerate(result_sets):
+#     print(f"Position [{i}]: {s}")
 
-# sort the arr
-arr = sorted(arr)
+# # sort the arr
+# arr = sorted(arr)
 
-# Convert ndarray to DataFrame
-df_output = pd.DataFrame(arr)
+# # Convert ndarray to DataFrame
+# df_output = pd.DataFrame(arr)
 
-# Save DataFrame to CSV
-df_output.to_csv('./output.csv', index=False)
+# # Save DataFrame to CSV
+# df_output.to_csv('./output.csv', index=False)
+
